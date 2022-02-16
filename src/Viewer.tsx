@@ -7,10 +7,12 @@ export const Viewer: React.VFC<{ lines: Line[]; }> = (
   { lines },
 ) => {
   return (
-    <div className={css({ overflow: "hidden" })}>
+    <div className={css({})}>
       {lines.map(({ id, text }) => (
         <Fragment key={id}>
-          <p>{text}</p>
+          <div id={id}>
+            <p>{text}</p>
+          </div>
         </Fragment>
       ))}
     </div>
