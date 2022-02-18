@@ -1,7 +1,6 @@
 import { Line as LineType } from "~/types";
 
 import { ContextsMap, DisplayBlockUnion, parseText } from "./parseText";
-import { RedirectBlock } from "./parseText/types";
 
 export type ParsedLine = { id: string; blocks: DisplayBlockUnion[]; };
 
@@ -18,12 +17,5 @@ export const parseLines = (
 
 const parseLine = (line: LineType, contextsMap: ContextsMap): [ParsedLine, ContextsMap] => {
   const blocks = parseText(line.text, contextsMap);
-
-  blocks
-    .filter((block): block is RedirectBlock => block.type === "REDIRECT")
-    .forEach(({ context, term }) =>
-      context && contextsMap.set(term, (contextsMap.get(term) || new Set()).add(context))
-    );
-
   return [{ id: line.id, blocks }, contextsMap];
 };

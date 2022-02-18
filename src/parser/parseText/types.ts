@@ -1,4 +1,4 @@
-export type ContextsMap = Map<string, Set<string>>;
+export type ContextsMap = Map<string, string[]>;
 
 export type PureBlock = { type: "PURE"; text: string; };
 
@@ -7,8 +7,8 @@ export type RedirectBlock =
   & { type: "REDIRECT"; text: string; }
   & (
     | { context: null; term: string; } // contextがわからない
-    | { context: string; term: string; implict: true; } // 暗黙のcontextがある
-    | { context: string; term: string; implict: false; } // 自明のcontextがある
+    | { context: string; term: string; color: number; implict: true; } // 暗黙のcontextがある
+    | { context: string; term: string; color: number; implict: false; } // 自明のcontextがある
   );
 
 export type ParsedMonospaceBlock = { type: "PARSED_MONOSPACE"; text: string; };
