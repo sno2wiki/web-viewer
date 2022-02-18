@@ -1,7 +1,15 @@
+export type ContextsMap = Map<string, Set<string>>;
+
 export type PureBlock = { type: "PURE"; text: string; };
 
 export type ParsedRedirectBlock = { type: "PARSED_REDIRECT"; text: string; };
-export type RedirectBlock = { type: "REDIRECT"; text: string; };
+export type RedirectBlock =
+  & { type: "REDIRECT"; text: string; }
+  & (
+    | { context: null; term: string; } // contextがわからない
+    | { context: string; term: string; implict: true; } // 暗黙のcontextがある
+    | { context: string; term: string; implict: false; } // 自明のcontextがある
+  );
 
 export type ParsedMonospaceBlock = { type: "PARSED_MONOSPACE"; text: string; };
 export type MonospaceBlock = { type: "MONOSPACE"; text: string; };

@@ -1,12 +1,15 @@
 import { css } from "@emotion/css";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { Line } from "./components/Line";
+import { parseLines } from "./parser";
 import { Line as LineType } from "./types";
 
 export const Viewer: React.VFC<{ lines: LineType[]; }> = (
   { lines },
 ) => {
+  const parsed = useMemo(() => parseLines(lines, new Map()), [lines]);
+  /*
   const contextsMap = useMemo(
     () =>
       (lines
@@ -34,10 +37,12 @@ export const Viewer: React.VFC<{ lines: LineType[]; }> = (
     if (!cands || cands.size !== 1) return null;
     else return [...cands][0];
   }, [contextsMap]);
+  */
 
   return (
     <div className={css({})}>
-      {lines.map(({ id, text }) => <Line key={id} lineId={id} text={text} findContext={findContext} />)}
+      {parsed.map(({ id, blocks }) => <Line key={id} lineId={id} blocks={blocks} />)}
+      {/* lines.map(({ id, text }) => <Line key={id} lineId={id} text={text} findContext={findContext} />) */}
     </div>
   );
 };

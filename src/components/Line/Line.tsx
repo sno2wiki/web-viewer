@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 
-import { parser } from "~/parser";
+import { DisplayBlockUnion } from "~/parser";
 
 import { Italic } from "./Italic";
 import { Monospace } from "./Monospace";
@@ -11,21 +11,18 @@ import { Strong } from "./Strong";
 
 export const Line: React.VFC<{
   lineId: string;
-  text: string;
-  findContext(term: string): string | null;
-}> = ({ lineId, text, findContext }) => {
-  const blocks = useMemo(() => parser(text), [text]);
-
+  blocks: DisplayBlockUnion[];
+}> = ({ lineId, blocks }) => {
   return (
     <div id={lineId} className={css({ fontFamily: "sans-serif" })}>
       <p className={css({ display: "inline-block" })}>
         {blocks.map((block, i) => (
           <Fragment key={i}>
-            {block.type === "REDIRECT" && <Redirect text={block.text} findContext={findContext} />}
-            {block.type === "MONOSPACE" && <Monospace text={block.text} />}
-            {block.type === "STRONG" && <Strong text={block.text} />}
-            {block.type === "ITALIC" && <Italic text={block.text} />}
-            {block.type === "PLAIN" && <Plain text={block.text} />}
+            {block.type === "REDIRECT" && <Redirect {...block} />}
+            {block.type === "MONOSPACE" && <Monospace {...block} />}
+            {block.type === "STRONG" && <Strong {...block} />}
+            {block.type === "ITALIC" && <Italic {...block} />}
+            {block.type === "PLAIN" && <Plain {...block} />}
           </Fragment>
         ))}
       </p>

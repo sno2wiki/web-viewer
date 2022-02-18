@@ -1,2 +1,2 @@
-export { parser } from "./parser";
-export type { ItalicBlock, PlainBlock, RedirectBlock, StrongBlock } from "./types";
+export { parseLines } from "./parseLines";
+export type { DisplayBlockUnion } from "./parseText";
