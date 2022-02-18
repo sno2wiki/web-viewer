@@ -1,20 +1,15 @@
 import { css } from "@emotion/css";
-import React, { Fragment } from "react";
+import React from "react";
 
-import { Line } from "./types";
+import { Line } from "./components/Line";
+import { Line as LineType } from "./types";
 
-export const Viewer: React.VFC<{ lines: Line[]; }> = (
+export const Viewer: React.VFC<{ lines: LineType[]; }> = (
   { lines },
 ) => {
   return (
     <div className={css({})}>
-      {lines.map(({ id, text }) => (
-        <Fragment key={id}>
-          <div id={id}>
-            <p>{text}</p>
-          </div>
-        </Fragment>
-      ))}
+      {lines.map(({ id, text }) => <Line key={id} lineId={id} text={text} />)}
     </div>
   );
 };
