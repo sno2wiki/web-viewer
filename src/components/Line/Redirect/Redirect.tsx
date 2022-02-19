@@ -14,7 +14,7 @@ export const Redirect: React.VFC<
   if (!redirect.context) {
     return (
       <a
-        href={`/redirect/_/${redirect.term}`}
+        href={`/redirects/_/${redirect.term}`}
         className={css({ color: "red" })}
       >
         {text}
@@ -23,7 +23,7 @@ export const Redirect: React.VFC<
   }
   return (
     <a
-      href={`/redirect/${redirect.context}/${redirect.term}`}
+      href={`/redirects/${redirect.context}/${redirect.term}`}
       className={cx(
         css({ padding: "2px 2px" }),
         !redirect.implict && css({ fontWeight: 700 }),
