@@ -1,19 +1,41 @@
 import {
+  DelBlock,
   ItalicBlock,
   MonospaceBlock,
+  ParsedDelBlock,
   ParsedItalicBlock,
   ParsedMonospaceBlock,
   ParsedRedirectBlock,
   ParsedStrongBlock,
+  ParsedWavyBlock,
   ParsingBlockUnion,
   StrongBlock,
+  WavyBlock,
 } from "./types";
+
+export const buildDecoParser2 = (block: DelBlock) => {
+  return buildDecoParser("\\~\\~.+?\\~\\~", "WAVY", "PARSED_WAVY", `PARSED_${block.type}`);
+};
 
 export const buildDecoParser = (
   pattern: string,
-  target: (MonospaceBlock | StrongBlock | ItalicBlock)["type"],
-  before: (ParsedRedirectBlock | ParsedMonospaceBlock | ParsedStrongBlock | ParsedItalicBlock)["type"],
-  after: (ParsedRedirectBlock | ParsedMonospaceBlock | ParsedStrongBlock | ParsedItalicBlock)["type"],
+  target: (MonospaceBlock | StrongBlock | ItalicBlock | DelBlock | WavyBlock)["type"],
+  before: (
+    | ParsedRedirectBlock
+    | ParsedMonospaceBlock
+    | ParsedStrongBlock
+    | ParsedItalicBlock
+    | ParsedDelBlock
+    | ParsedWavyBlock
+  )["type"],
+  after: (
+    | ParsedRedirectBlock
+    | ParsedMonospaceBlock
+    | ParsedStrongBlock
+    | ParsedItalicBlock
+    | ParsedDelBlock
+    | ParsedWavyBlock
+  )["type"],
 ) =>
   (text: string): ParsingBlockUnion[] => {
     const result = new RegExp(pattern, "d").exec(text);

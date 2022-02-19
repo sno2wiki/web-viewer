@@ -3,11 +3,13 @@ import { Fragment } from "react";
 
 import { DisplayBlockUnion } from "~/parser";
 
+import { Del } from "./Del";
 import { Italic } from "./Italic";
 import { Monospace } from "./Monospace";
 import { Plain } from "./Plain";
 import { Redirect } from "./Redirect";
 import { Strong } from "./Strong";
+import { Wavy } from "./Wavy";
 
 export const Line: React.VFC<{
   lineId: string;
@@ -22,6 +24,8 @@ export const Line: React.VFC<{
             {block.type === "MONOSPACE" && <Monospace {...block} />}
             {block.type === "STRONG" && <Strong {...block} />}
             {block.type === "ITALIC" && <Italic {...block} />}
+            {block.type === "DEL" && <Del {...block} />}
+            {block.type === "WAVY" && <Wavy {...block} />}
             {block.type === "PLAIN" && <Plain {...block} />}
           </Fragment>
         ))}

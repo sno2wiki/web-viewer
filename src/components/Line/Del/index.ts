@@ -1,0 +1,1 @@
+export { Del } from "./Del";

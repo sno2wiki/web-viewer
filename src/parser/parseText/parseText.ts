@@ -1,7 +1,9 @@
+import { parseDel } from "./parseDel";
 import { parseItalic } from "./parseItalic";
 import { parseMonospace } from "./parseMonospace";
 import { parseRedirect } from "./parseRedirect";
 import { parseStrong } from "./parseStrong";
+import { parseWavy } from "./parseWavy";
 import { ContextsMap, DisplayBlockUnion, ParsingBlockUnion } from "./types";
 
 export const parseText = (text: string, contexts: ContextsMap): DisplayBlockUnion[] => {
@@ -25,6 +27,12 @@ const parseRecursively = (block: ParsingBlockUnion, ctxMap: ContextsMap): Parsin
       return parseItalic(block.text)
         .reduce((prev: ParsingBlockUnion[], block) => [...prev, ...parseRecursively(block, ctxMap)], []);
     case "PARSED_ITALIC":
+      return parseDel(block.text)
+        .reduce((prev: ParsingBlockUnion[], block) => [...prev, ...parseRecursively(block, ctxMap)], []);
+    case "PARSED_DEL":
+      return parseWavy(block.text)
+        .reduce((prev: ParsingBlockUnion[], block) => [...prev, ...parseRecursively(block, ctxMap)], []);
+    case "PARSED_WAVY":
       return [{ type: "PLAIN", text: block.text }];
     default:
       return [block];
