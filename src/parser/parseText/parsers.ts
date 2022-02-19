@@ -1,3 +1,4 @@
+import { DelBlock, ItalicBlock, MonospaceBlock, StrongBlock, WavyBlock } from "./types";
 import { ContextsMap, ParsedRedirectBlock, ParsingBlockUnion, PureBlock, RedirectBlock } from "./types";
 
 export const getRedirect = (preTerm: string, preContext: string, ctxMap: ContextsMap): {
@@ -65,3 +66,48 @@ export const parseRedirect = (
 
   return { blocks, override };
 };
+
+export const priority = {
+  "WAVY": "DEL",
+  "DEL": "ITALIC",
+  "ITALIC": "STRONG",
+  "STRONG": "MONOSPACE",
+  "MONOSPACE": "REDIRECT",
+} as const;
+
+export const buildDecoParser = <
+  TTargetBlock extends MonospaceBlock | StrongBlock | ItalicBlock | DelBlock | WavyBlock,
+>(pattern: string, type: TTargetBlock["type"]) => {
+  return (text: string) => {
+    const result = new RegExp(pattern, "d").exec(text);
+    if (result === null) {
+      return [{ type: `PARSED_${type}`, text }];
+    }
+
+    const extract = result[0];
+    const indices: [number, number] = (result as any).indices[0];
+
+    const redBlock = { type, text: extract };
+    const befBlock = indices[0] === 0
+      ? undefined
+      : { type: `PARSED_${type}`, text: text.slice(0, indices[0]) };
+    const aftBlock = indices[1] === text.length
+      ? undefined
+      : { type: `PARSED_${priority[type]}`, text: text.slice(indices[1]) };
+
+    if (befBlock && aftBlock) {
+      return [befBlock, redBlock, aftBlock];
+    } else if (!befBlock && aftBlock) {
+      return [redBlock, aftBlock];
+    } else if (befBlock && !aftBlock) {
+      return [befBlock, redBlock];
+    }
+    return [redBlock];
+  };
+};
+
+export const parseMonospace = buildDecoParser<MonospaceBlock>("\\`.+?\\`", "MONOSPACE");
+export const parseStrong = buildDecoParser<StrongBlock>("\\*\\*.+?\\*\\*", "STRONG");
+export const parseItalic = buildDecoParser<ItalicBlock>("\\_\\_.+?\\_\\_", "ITALIC");
+export const parseDel = buildDecoParser<DelBlock>("\\-\\-.+?\\-\\-", "DEL");
+export const parseWavy = buildDecoParser<WavyBlock>("\\~\\~.+?\\~\\~", "WAVY");
