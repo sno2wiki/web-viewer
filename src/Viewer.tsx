@@ -1,8 +1,8 @@
 import { css } from "@emotion/css";
+import { parseLines } from "@sno2wiki/document-parser";
 import React, { useMemo } from "react";
 
 import { Line } from "./components/Line";
-import { parseLines } from "./parser";
 import { Line as LineType } from "./types";
 
 export const Viewer: React.VFC<{ lines: LineType[]; }> = (
